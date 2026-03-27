@@ -9,33 +9,59 @@
 <body style="font-family: Arial; text-align: center; padding: 40px;">
 
   <h1>🎤 Song Seed</h1>
-  <p>Capture your ideas</p>
+  <p>Capture or upload your idea</p>
 
+  <!-- Record directly -->
+  <button id="recordBtn">🎙️ Record</button><br><br>
+
+  <!-- Upload file -->
   <input type="file" id="audioUpload" accept="audio/*"><br><br>
 
   <audio id="player" controls style="display:none;"></audio>
 
-  <div id="lyrics" style="margin-top:20px;"></div>
-
   <script>
-    const upload = document.getElementById("audioUpload");
+    const recordBtn = document.getElementById("recordBtn");
     const player = document.getElementById("player");
-    const lyricsDiv = document.getElementById("lyrics");
+
+    let mediaRecorder;
+    let audioChunks = [];
+
+    // RECORD FEATURE
+    recordBtn.onclick = async () => {
+      if (!mediaRecorder || mediaRecorder.state === "inactive") {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.start();
+        recordBtn.innerText = "⏹ Stop Recording";
+
+        mediaRecorder.ondataavailable = e => {
+          audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunks, { type: "audio/webm" });
+          const url = URL.createObjectURL(blob);
+          player.src = url;
+          player.style.display = "block";
+          audioChunks = [];
+        };
+
+      } else {
+        mediaRecorder.stop();
+        recordBtn.innerText = "🎙️ Record";
+      }
+    };
+
+    // FILE UPLOAD
+    const upload = document.getElementById("audioUpload");
 
     upload.addEventListener("change", function() {
       const file = this.files[0];
-
       if (file) {
         const url = URL.createObjectURL(file);
         player.src = url;
         player.style.display = "block";
-
-        lyricsDiv.innerHTML = "🧠 Processing...";
-        
-        // Fake placeholder (we’ll replace with real AI next)
-        setTimeout(() => {
-          lyricsDiv.innerHTML = "Lyrics will appear here soon...";
-        }, 2000);
       }
     });
   </script>
