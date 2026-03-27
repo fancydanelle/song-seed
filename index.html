@@ -9,52 +9,24 @@
 <body style="font-family: Arial; text-align: center; padding: 40px;">
 
   <h1>🎤 Song Seed</h1>
-  <p>Capture or upload your idea</p>
+  <p>Tap below to record or upload</p>
 
-  <!-- Record directly -->
-  <button id="recordBtn">🎙️ Record</button><br><br>
+  <!-- THIS is the important part -->
+  <input 
+    type="file" 
+    id="audioUpload" 
+    accept="audio/*" 
+    capture="environment"
+    style="font-size:18px; padding:10px;"
+  >
 
-  <!-- Upload file -->
-  <input type="file" id="audioUpload" accept="audio/*"><br><br>
+  <br><br>
 
   <audio id="player" controls style="display:none;"></audio>
 
   <script>
-    const recordBtn = document.getElementById("recordBtn");
-    const player = document.getElementById("player");
-
-    let mediaRecorder;
-    let audioChunks = [];
-
-    // RECORD FEATURE
-    recordBtn.onclick = async () => {
-      if (!mediaRecorder || mediaRecorder.state === "inactive") {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-
-        mediaRecorder.start();
-        recordBtn.innerText = "⏹ Stop Recording";
-
-        mediaRecorder.ondataavailable = e => {
-          audioChunks.push(e.data);
-        };
-
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(audioChunks, { type: "audio/webm" });
-          const url = URL.createObjectURL(blob);
-          player.src = url;
-          player.style.display = "block";
-          audioChunks = [];
-        };
-
-      } else {
-        mediaRecorder.stop();
-        recordBtn.innerText = "🎙️ Record";
-      }
-    };
-
-    // FILE UPLOAD
     const upload = document.getElementById("audioUpload");
+    const player = document.getElementById("player");
 
     upload.addEventListener("change", function() {
       const file = this.files[0];
