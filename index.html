@@ -9,21 +9,15 @@
 <body style="font-family: Arial; text-align: center; padding: 40px;">
 
   <h1>🎤 Song Seed</h1>
-  <p>Tap to record your idea</p>
+  <p>Record a new idea or upload an old one</p>
 
-  <!-- Hidden file input -->
+  <!-- IMPORTANT: visible input, no capture -->
   <input 
     type="file" 
     id="audioUpload" 
-    accept="audio/*.m4a"
-    capture
-    style="display:none;"
+    accept="audio/*,.m4a"
+    style="font-size:18px; padding:12px;"
   >
-
-  <!-- Visible button -->
-  <button id="recordBtn" style="font-size:20px; padding:15px;">
-    🎙️ Record
-  </button>
 
   <br><br>
 
@@ -32,14 +26,7 @@
   <script>
     const upload = document.getElementById("audioUpload");
     const player = document.getElementById("player");
-    const recordBtn = document.getElementById("recordBtn");
 
-    // When button is tapped → open iPhone recorder
-    recordBtn.onclick = () => {
-      upload.click();
-    };
-
-    // When audio is selected/recorded
     upload.addEventListener("change", function() {
       const file = this.files[0];
 
