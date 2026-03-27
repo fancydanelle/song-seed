@@ -9,21 +9,33 @@
 <body style="font-family: Arial; text-align: center; padding: 40px;">
 
   <h1>🎤 Song Seed</h1>
+  <p>Capture your ideas</p>
 
   <input type="file" id="audioUpload" accept="audio/*"><br><br>
 
   <audio id="player" controls style="display:none;"></audio>
 
+  <div id="lyrics" style="margin-top:20px;"></div>
+
   <script>
     const upload = document.getElementById("audioUpload");
     const player = document.getElementById("player");
+    const lyricsDiv = document.getElementById("lyrics");
 
     upload.addEventListener("change", function() {
       const file = this.files[0];
+
       if (file) {
         const url = URL.createObjectURL(file);
         player.src = url;
         player.style.display = "block";
+
+        lyricsDiv.innerHTML = "🧠 Processing...";
+        
+        // Fake placeholder (we’ll replace with real AI next)
+        setTimeout(() => {
+          lyricsDiv.innerHTML = "Lyrics will appear here soon...";
+        }, 2000);
       }
     });
   </script>
